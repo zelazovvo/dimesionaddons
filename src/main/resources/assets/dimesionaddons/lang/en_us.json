@@ -1,6 +1,3 @@
 {
-  "item.dimesionaddons.scorpion_spawn_egg": "Scorpion Spawn Egg",
-  "subtitles.scorpionattack": "",
-  "effect.dimesionaddons.venom": "Venom",
-  "entity.dimesionaddons.scorpion": "Scorpion"
+  "effect.dimesionaddons.venom": "Venom"
 }

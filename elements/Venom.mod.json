@@ -27,7 +27,7 @@
         "attribute": {
           "value": "MOVEMENT_SPEED"
         },
-        "amount": -0.09,
+        "amount": -0.0989,
         "operation": "ADD_MULTIPLIED_BASE"
       },
       {
@@ -41,7 +41,7 @@
         "attribute": {
           "value": "SNEAKING_SPEED"
         },
-        "amount": -0.09,
+        "amount": -0.099,
         "operation": "ADD_VALUE"
       }
     ],

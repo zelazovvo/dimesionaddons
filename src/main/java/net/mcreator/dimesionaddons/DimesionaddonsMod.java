@@ -18,11 +18,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.FriendlyByteBuf;
 
-import net.mcreator.dimesionaddons.init.DimesionaddonsModTabs;
-import net.mcreator.dimesionaddons.init.DimesionaddonsModSounds;
 import net.mcreator.dimesionaddons.init.DimesionaddonsModMobEffects;
-import net.mcreator.dimesionaddons.init.DimesionaddonsModItems;
-import net.mcreator.dimesionaddons.init.DimesionaddonsModEntities;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.Map;
@@ -41,11 +37,6 @@ public class DimesionaddonsMod {
 		// End of user code block mod constructor
 		NeoForge.EVENT_BUS.register(this);
 		modEventBus.addListener(this::registerNetworking);
-		DimesionaddonsModSounds.REGISTRY.register(modEventBus);
-
-		DimesionaddonsModItems.REGISTRY.register(modEventBus);
-		DimesionaddonsModEntities.REGISTRY.register(modEventBus);
-		DimesionaddonsModTabs.REGISTRY.register(modEventBus);
 
 		DimesionaddonsModMobEffects.REGISTRY.register(modEventBus);
 

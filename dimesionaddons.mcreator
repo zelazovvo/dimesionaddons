@@ -29,81 +29,15 @@
           }
         ]
       }
-    },
-    {
-      "name": "Scorpion",
-      "type": "animatedentity",
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "scorpion",
-      "metadata": {
-        "files": [
-          "src/main/java/net/mcreator/dimesionaddons/client/renderer/ScorpionRenderer.java",
-          "src/main/java/net/mcreator/dimesionaddons/entity/model/ScorpionModel.java",
-          "src/main/java/net/mcreator/dimesionaddons/entity/ScorpionEntity.java",
-          "src/main/resources/assets/dimesionaddons/models/item/scorpion_spawn_egg.json",
-          "src/main/resources/data/dimesionaddons/neoforge/biome_modifier/scorpion_biome_modifier.json"
-        ]
-      }
-    },
-    {
-      "name": "ScorpionOnEntityTickUpdate",
-      "type": "procedure",
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "scorpion_on_entity_tick_update",
-      "metadata": {
-        "files": [
-          "src/main/java/net/mcreator/dimesionaddons/procedures/ScorpionOnEntityTickUpdateProcedure.java"
-        ],
-        "dependencies": [
-          {
-            "name": "entity",
-            "type": "entity"
-          },
-          {
-            "name": "x",
-            "type": "number"
-          },
-          {
-            "name": "y",
-            "type": "number"
-          },
-          {
-            "name": "z",
-            "type": "number"
-          },
-          {
-            "name": "world",
-            "type": "world"
-          }
-        ]
-      }
     }
   ],
   "variable_elements": [],
-  "sound_elements": [
-    {
-      "name": "scorpionattack",
-      "files": [
-        "scorpionattack.ogg"
-      ],
-      "category": "hostile",
-      "subtitle": ""
-    }
-  ],
-  "tag_elements": {
-    "ENTITIES:mod:tag": [
-      "CUSTOM:Scorpion"
-    ]
-  },
+  "sound_elements": [],
+  "tag_elements": {},
   "tab_element_order": {},
   "language_map": {
     "en_us": {
-      "item.dimesionaddons.scorpion_spawn_egg": "Scorpion Spawn Egg",
-      "subtitles.scorpionattack": "",
-      "effect.dimesionaddons.venom": "Venom",
-      "entity.dimesionaddons.scorpion": "Scorpion"
+      "effect.dimesionaddons.venom": "Venom"
     }
   },
   "foldersRoot": {
@@ -121,13 +55,8 @@
     "requiredMods": [],
     "dependencies": [],
     "dependants": [],
-    "mcreatorDependencies": [
-      "mcreator_link",
-      "geckolib",
-      "jei"
-    ],
+    "mcreatorDependencies": [],
     "currentGenerator": "neoforge-1.21.1",
-    "credits": "Created using mod maker MCreator - https://mcreator.net/about",
     "modElementsPackage": "net.mcreator.dimesionaddons"
   },
   "mcreatorVersion": 202400452410
