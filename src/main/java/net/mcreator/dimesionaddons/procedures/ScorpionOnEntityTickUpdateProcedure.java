@@ -48,7 +48,7 @@ public class ScorpionOnEntityTickUpdateProcedure {
 				entity.fallDistance = 0;
 				if ((entity instanceof Mob _mobEnt ? (Entity) _mobEnt.getTarget() : null) instanceof LivingEntity _entity && !_entity.level().isClientSide())
 					_entity.addEffect(new MobEffectInstance(DimesionaddonsModMobEffects.VENOM, 3600, 1));
-				DimesionaddonsMod.queueServerWork(400, () -> {
+				DimesionaddonsMod.queueServerWork(100, () -> {
 					if (entity instanceof ScorpionEntity _datEntSetI)
 						_datEntSetI.getEntityData().set(ScorpionEntity.DATA_VenonCD, 0);
 					if (entity instanceof ScorpionEntity _datEntSetL)

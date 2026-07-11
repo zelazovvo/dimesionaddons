@@ -23,7 +23,7 @@ import net.mcreator.dimesionaddons.DimesionaddonsMod;
 public class DimesionaddonsModEntities {
 	public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(Registries.ENTITY_TYPE, DimesionaddonsMod.MODID);
 	public static final DeferredHolder<EntityType<?>, EntityType<ScorpionEntity>> SCORPION = register("scorpion",
-			EntityType.Builder.<ScorpionEntity>of(ScorpionEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+			EntityType.Builder.<ScorpionEntity>of(ScorpionEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
 					.sized(0.6f, 1.8f));
 
