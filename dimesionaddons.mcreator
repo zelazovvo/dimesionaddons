@@ -1,11 +1,44 @@
 {
-  "mod_elements": [],
+  "mod_elements": [
+    {
+      "name": "Venom",
+      "type": "potioneffect",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "venom",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/dimesionaddons/potion/VenomMobEffect.java"
+        ]
+      }
+    },
+    {
+      "name": "VenomEffectStartedapplied",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "venom_effect_startedapplied",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/dimesionaddons/procedures/VenomEffectStartedappliedProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      }
+    }
+  ],
   "variable_elements": [],
   "sound_elements": [],
   "tag_elements": {},
   "tab_element_order": {},
   "language_map": {
-    "en_us": {}
+    "en_us": {
+      "effect.dimesionaddons.venom": "Venom"
+    }
   },
   "foldersRoot": {
     "name": "~",
