@@ -1,23 +1,6 @@
 
 package net.mcreator.dimesionaddons.potion;
 
-import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.common.EffectCures;
-import net.neoforged.neoforge.common.EffectCure;
-
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.resources.ResourceLocation;
-
-import net.mcreator.dimesionaddons.procedures.VenomEffectStartedappliedProcedure;
-import net.mcreator.dimesionaddons.DimesionaddonsMod;
-
-import java.util.Set;
-
 public class VenomMobEffect extends MobEffect {
 	public VenomMobEffect() {
 		super(MobEffectCategory.NEUTRAL, -10173333);

@@ -1,0 +1,224 @@
+
+package net.mcreator.dimesionaddons.entity;
+
+import net.minecraft.nbt.Tag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+
+import javax.annotation.Nullable;
+
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationState;
+
+public class ScorpionEntity extends Monster implements GeoEntity {
+	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(ScorpionEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(ScorpionEntity.class, EntityDataSerializers.STRING);
+	public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(ScorpionEntity.class, EntityDataSerializers.STRING);
+
+	public static final EntityDataAccessor<Integer> DATA_VenonCD = SynchedEntityData.defineId(ScorpionEntity.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<Boolean> DATA_VenomUsuable = SynchedEntityData.defineId(ScorpionEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> DATA_VenomSFX = SynchedEntityData.defineId(ScorpionEntity.class, EntityDataSerializers.BOOLEAN);
+
+	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+	private boolean swinging;
+	private boolean lastloop;
+	private long lastSwing;
+	public String animationprocedure = "empty";
+
+	public ScorpionEntity(EntityType<ScorpionEntity> type, Level world) {
+		super(type, world);
+		xpReward = 0;
+		setNoAi(false);
+
+	}
+
+	@Override
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(SHOOT, false);
+		builder.define(ANIMATION, "undefined");
+		builder.define(TEXTURE, "scorpion_tex");
+		builder.define(DATA_VenonCD, 0);
+		builder.define(DATA_VenomUsuable, false);
+		builder.define(DATA_VenomSFX, false);
+	}
+
+	public void setTexture(String texture) {
+		this.entityData.set(TEXTURE, texture);
+	}
+
+	public String getTexture() {
+		return this.entityData.get(TEXTURE);
+	}
+
+	@Override
+	protected void registerGoals() {
+		super.registerGoals();
+
+		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, false) {
+
+			@Override
+			protected boolean canPerformAttack(LivingEntity entity) {
+				return this.isTimeToAttack() && this.mob.distanceToSqr(entity) < (this.mob.getBbWidth() * this.mob.getBbWidth() + entity.getBbWidth()) && this.mob.getSensing().hasLineOfSight(entity);
+			}
+
+		});
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, false, true));
+		this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1));
+		this.goalSelector.addGoal(4, new TryFindWaterGoal(this));
+		this.targetSelector.addGoal(5, new HurtByTargetGoal(this).setAlertOthers());
+		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+		this.goalSelector.addGoal(7, new FloatGoal(this));
+
+	}
+
+	@Override
+	public SoundEvent getHurtSound(DamageSource ds) {
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.generic.hurt"));
+	}
+
+	@Override
+	public SoundEvent getDeathSound() {
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.generic.death"));
+	}
+
+	@Override
+	public boolean hurt(DamageSource source, float amount) {
+		if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud || source.typeHolder().is(NeoForgeMod.POISON_DAMAGE))
+			return false;
+		return super.hurt(source, amount);
+	}
+
+	@Override
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
+		compound.putString("Texture", this.getTexture());
+		compound.putInt("DataVenonCD", this.entityData.get(DATA_VenonCD));
+		compound.putBoolean("DataVenomUsuable", this.entityData.get(DATA_VenomUsuable));
+		compound.putBoolean("DataVenomSFX", this.entityData.get(DATA_VenomSFX));
+	}
+
+	@Override
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
+		if (compound.contains("Texture"))
+			this.setTexture(compound.getString("Texture"));
+		if (compound.contains("DataVenonCD"))
+			this.entityData.set(DATA_VenonCD, compound.getInt("DataVenonCD"));
+		if (compound.contains("DataVenomUsuable"))
+			this.entityData.set(DATA_VenomUsuable, compound.getBoolean("DataVenomUsuable"));
+		if (compound.contains("DataVenomSFX"))
+			this.entityData.set(DATA_VenomSFX, compound.getBoolean("DataVenomSFX"));
+	}
+
+	@Override
+	public void baseTick() {
+		super.baseTick();
+		this.refreshDimensions();
+	}
+
+	@Override
+	public EntityDimensions getDefaultDimensions(Pose pose) {
+		return super.getDefaultDimensions(pose).scale(1f);
+	}
+
+	public static void init(RegisterSpawnPlacementsEvent event) {
+		event.register(DimesionaddonsModEntities.SCORPION.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+				(entityType, world, reason, pos, random) -> (world.getDifficulty() != Difficulty.PEACEFUL && Monster.isDarkEnoughToSpawn(world, pos, random) && Mob.checkMobSpawnRules(entityType, world, reason, pos, random)),
+				RegisterSpawnPlacementsEvent.Operation.REPLACE);
+	}
+
+	public static AttributeSupplier.Builder createAttributes() {
+		AttributeSupplier.Builder builder = Mob.createMobAttributes();
+		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.3);
+		builder = builder.add(Attributes.MAX_HEALTH, 16);
+		builder = builder.add(Attributes.ARMOR, 0.5);
+		builder = builder.add(Attributes.ATTACK_DAMAGE, 3);
+		builder = builder.add(Attributes.FOLLOW_RANGE, 16);
+		builder = builder.add(Attributes.STEP_HEIGHT, 0.6);
+
+		return builder;
+	}
+
+	private PlayState movementPredicate(AnimationState event) {
+		if (this.animationprocedure.equals("empty")) {
+			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F))
+
+			) {
+				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
+			}
+			return event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+		}
+		return PlayState.STOP;
+	}
+
+	private PlayState attackingPredicate(AnimationState event) {
+		double d1 = this.getX() - this.xOld;
+		double d0 = this.getZ() - this.zOld;
+		float velocity = (float) Math.sqrt(d1 * d1 + d0 * d0);
+		if (getAttackAnim(event.getPartialTick()) > 0f && !this.swinging) {
+			this.swinging = true;
+			this.lastSwing = level().getGameTime();
+		}
+		if (this.swinging && this.lastSwing + 7L <= level().getGameTime()) {
+			this.swinging = false;
+		}
+		if (this.swinging && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+			event.getController().forceAnimationReset();
+			return event.setAndContinue(RawAnimation.begin().thenPlay("attack"));
+		}
+		return PlayState.CONTINUE;
+	}
+
+	String prevAnim = "empty";
+
+	private PlayState procedurePredicate(AnimationState event) {
+		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty"))) {
+			if (!this.animationprocedure.equals(prevAnim))
+				event.getController().forceAnimationReset();
+			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+				this.animationprocedure = "empty";
+				event.getController().forceAnimationReset();
+			}
+		} else if (animationprocedure.equals("empty")) {
+			prevAnim = "empty";
+			return PlayState.STOP;
+		}
+		prevAnim = this.animationprocedure;
+		return PlayState.CONTINUE;
+	}
+
+	@Override
+	protected void tickDeath() {
+		++this.deathTime;
+		if (this.deathTime == 20) {
+			this.remove(ScorpionEntity.RemovalReason.KILLED);
+			this.dropExperience(this);
+
+		}
+	}
+
+	public String getSyncedAnimation() {
+		return this.entityData.get(ANIMATION);
+	}
+
+	public void setAnimation(String animation) {
+		this.entityData.set(ANIMATION, animation);
+	}
+
+	@Override
+	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+		data.add(new AnimationController<>(this, "movement", 4, this::movementPredicate));
+		data.add(new AnimationController<>(this, "attacking", 4, this::attackingPredicate));
+		data.add(new AnimationController<>(this, "procedure", 4, this::procedurePredicate));
+	}
+
+	@Override
+	public AnimatableInstanceCache getAnimatableInstanceCache() {
+		return this.cache;
+	}
+
+}

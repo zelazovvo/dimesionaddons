@@ -1,0 +1,10 @@
+{
+  "scorpionattack": {
+    "sounds": [
+      {
+        "name": "dimesionaddons:scorpionattack.ogg",
+        "stream": false
+      }
+    ]
+  }
+}
