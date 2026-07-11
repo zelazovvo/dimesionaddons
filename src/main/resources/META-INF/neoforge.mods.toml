@@ -28,6 +28,12 @@ ordering="AFTER"
 side="BOTH"
 
 
+[[dependencies.dimesionaddons]]
+modId="geckolib"
+type="optional"
+versionRange="[0,)"
+ordering="NONE"
+side="BOTH"
 
 
 [[mixins]]
